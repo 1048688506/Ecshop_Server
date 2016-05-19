@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecshop.commodity.dao.GcategoryDao">
+	<resultMap type="Gcategory" id="IGcategoryResult">
+		<result property="cateId" column="cate_id" />
+		<result property="storeId" column="store_id" />
+		<result property="cateName" column="cate_name" />
+		<result property="parentId" column="parent_id" />
+		<result property="sortOrder" column="sort_order" />
+		<result property="idShow" column="id_show" />
+	</resultMap>
+	<select id="findGcategory" resultType="hashmap">
+		select cate_id as cateId
+		,cate_name as cateName from ecm_gcategory where parent_id=0
+	</select>
+	<!-- 根据商铺ID获取商铺商品所有分类 -->
+	<select id="finListById" parameterType="map" resultType="hashmap">
+		SELECT
+		Cate_name,Cate_id FROM ecm_gcategory
+		WHERE 1 =1
+		AND store_id = #{store_id}
+		AND parent_id = 0
+	</select>
+	<!-- 根据店铺ID 分类ID获取该店铺分类下的所有商品 -->
+	<select id="findGoodsBySidAndCid" parameterType="java.util.Map"
+		resultType="hashmap">
+		SELECT ecm_goods.goods_name,ecm_goods.default_image,ecm_goods.price
+		,ecm_goods_statistics.sales,ecm_goods_statistics.comments,ecm_goods.brand,ecm_goods.tags
+		FROM ecm_gcategory
+		LEFT JOIN ecm_category_goods ON ecm_gcategory.cate_id =
+		ecm_category_goods.cate_id
+		LEFT JOIN ecm_goods ON ecm_goods.goods_id =
+		ecm_category_goods.goods_id
+		LEFT JOIN ecm_goods_statistics ON
+		ecm_goods.goods_id = ecm_goods_statistics.goods_id
+		WHERE 1 =1
+		<if
+			test="store_id!=null and store_id !='' and cate_id!=null and cate_id!=''">
+			AND (
+			ecm_gcategory.cate_id = #{cate_id}
+			AND
+			ecm_goods.store_id= #{store_id}
+			)
+		</if>
+	</select>
+	<!-- 根据店铺ID获取店铺下的所有商品 -->
+	<select id="findGoodsBySid" parameterType="java.util.Map"
+		resultType="hashmap">
+		SELECT
+		ecm_goods.goods_name,
+		ecm_goods.default_image,
+		ecm_goods.price ,
+		ecm_goods_statistics.sales,
+		ecm_goods_statistics.comments,
+		ecm_goods.brand,
+		ecm_goods.tags
+		FROM ecm_goods
+		LEFT JOIN ecm_goods_statistics ON ecm_goods.goods_id =
+		ecm_goods_statistics.goods_id
+		WHERE 1 =1
+		AND
+		ecm_goods.store_id= #{store_id}
+
+
+	</select>
+	<!-- 添加店铺或者商品到我的收藏 -->
+	<insert id="saveCollectStore" parameterType="java.util.Map">
+		INSERT INTO ecm_collect
+		(
+		user_id,
+		type,
+		item_id,
+		add_time,
+		keyword
+		)
+		VALUES
+		(
+		#{user_id},
+		#{type},
+		#{item_id},
+		#{add_time},
+		#{keyword}
+		)
+
+	</insert>
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecshop.commodity.dao.CollectDao">
+	<resultMap type="Collect" id="collectClassId">
+		<result property="user_id" column="user_id"/>
+		<result property="type" column="type"/>
+		<result property="ltem_id" column="ltem_id"/>
+		<result property="keyword" column="keyword"/>
+		<result property="add_time" column="add_time"/>
+		<!--  
+		<association property="province" column="province_id" select="com.doctors.place.dao.ProvinceDao.findByCityId"></association>
+		<association property="city" column="city_id" select="com.doctors.place.dao.CityDao.findByCityId"></association>
+		<collection property="cityList" column="id" select="com.doctors.place.mappers.CityMapper.findByProvinceId"></collection>
+		private int id;
+	    private String user_name;
+	    private String phone;
+	    private String password;
+	    private String address;
+	    private String mail;
+		
+		
+		-->
+	</resultMap>
+	<select id="findCollectById" parameterType="map"  resultMap="collectClassId">
+		select * from ecm_collect where item_id=#{goods_id} and user_id=#{user_id}
+	</select>
+	
+	 <insert id="insertCollect" useGeneratedKeys="true"  keyProperty="user_id" parameterType="com.ecshop.commodity.model.Collect">
+           insert into ecm_collect(user_id, type, item_id, keyword, add_time) 
+               values(#{user_id}, "goods", #{ltem_id}, "商品", #{add_time})
+     </insert>
+     
+     <delete id = "deleteCollectById" parameterType ="map">  
+           delete from ecm_collect where user_id=#{user_id} and item_id=#{goods_id}  
+      </delete>  
+	<select id="findAllUserGoods" parameterType ="com.ecshop.utils.PageData"  resultType="com.ecshop.utils.PageData">
+			SELECT
+				ecm_goods.store_id,
+				ecm_goods.price,
+				ecm_goods.goods_name,
+				ecm_goods.goods_id,
+				ecm_goods.default_image
+				FROM ecm_collect LEFT JOIN ecm_goods ON 
+				ecm_collect.item_id=ecm_goods.goods_id 
+			WHERE 1=1
+			AND 
+			ecm_collect.user_id=#{user_id}			
+	</select>
+	<select id="findAllUserStores" parameterType ="com.ecshop.utils.PageData"  resultType="com.ecshop.utils.PageData">
+	SELECT
+		ecm_store.store_id,
+		ecm_store.store_name,
+		ecm_store.store_logo,
+		ecm_store.store_name,
+		ecm_store.sgrade,
+		ecm_store.description
+		FROM ecm_collect LEFT JOIN ecm_store ON 
+		ecm_collect.item_id=ecm_store.store_id 
+		WHERE 1=1
+		AND 
+		ecm_collect.user_id=#{user_id}
+	</select>
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ecshop.commodity.dao.OrderDao" >
+  <resultMap id="BaseResultMap" type="com.ecshop.commodity.model.EcmOrder" >
+    <id column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="extension" property="extension" jdbcType="VARCHAR" />
+    <result column="seller_id" property="sellerId" jdbcType="INTEGER" />
+    <result column="seller_name" property="sellerName" jdbcType="VARCHAR" />
+    <result column="buyer_id" property="buyerId" jdbcType="INTEGER" />
+    <result column="buyer_name" property="buyerName" jdbcType="VARCHAR" />
+    <result column="buyer_email" property="buyerEmail" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="add_time" property="addTime" jdbcType="INTEGER" />
+    <result column="payment_id" property="paymentId" jdbcType="INTEGER" />
+    <result column="payment_name" property="paymentName" jdbcType="VARCHAR" />
+    <result column="payment_bank" property="paymentBank" jdbcType="VARCHAR" />
+    <result column="payment_code" property="paymentCode" jdbcType="VARCHAR" />
+    <result column="out_trade_sn" property="outTradeSn" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="INTEGER" />
+    <result column="pay_message" property="payMessage" jdbcType="VARCHAR" />
+    <result column="ship_time" property="shipTime" jdbcType="INTEGER" />
+    <result column="invoice_no" property="invoiceNo" jdbcType="VARCHAR" />
+    <result column="finished_time" property="finishedTime" jdbcType="INTEGER" />
+    <result column="goods_amount" property="goodsAmount" jdbcType="DECIMAL" />
+    <result column="discount" property="discount" jdbcType="DECIMAL" />
+    <result column="order_amount" property="orderAmount" jdbcType="DECIMAL" />
+    <result column="evaluation_status" property="evaluationStatus" jdbcType="BIT" />
+    <result column="evaluation_time" property="evaluationTime" jdbcType="INTEGER" />
+    <result column="anonymous" property="anonymous" jdbcType="TINYINT" />
+    <result column="postscript" property="postscript" jdbcType="VARCHAR" />
+    <result column="pay_alter" property="payAlter" jdbcType="BIT" />
+    <result column="express_company" property="expressCompany" jdbcType="VARCHAR" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+  </resultMap>  
+   <resultMap type="com.ecshop.utils.PageData" id="PageData"/> 
+<select id="findOrderById"  resultType="hashmap" >
+		SELECT *FROM ecm_order WHERE 1 =1 AND 
+		(
+		buyer_id=#{0} 
+		AND 
+		status=#{1}
+		)
+</select>
+
+<select id="findOrderAll" resultMap="PageData">
+				SELECT
+				ecm_order.order_id,
+				ecm_order.order_sn,
+				ecm_order.seller_name,
+				ecm_order.add_time,
+				ecm_order.buyer_name,
+				ecm_order.goods_amount,
+				ecm_order.`status` ,
+				ecm_order.order_amount,
+				ecm_order.payment_name,
+				ecm_order.pay_time,
+				ecm_order_extm.consignee,
+				ecm_order_extm.address,
+				ecm_order_extm.phone_tel,
+				ecm_order_extm.phone_mob,
+				ecm_order_extm.shipping_name,
+				ecm_order_extm.zipcode,
+				ecm_order_extm.region_name,
+				ecm_order_goods.goods_name,
+				ecm_order_goods.price,
+				ecm_order_goods.quantity,
+				ecm_order_goods.is_valid
+				FROM
+				ecm_order LEFT JOIN
+				ecm_order_extm ON ecm_order.order_id =ecm_order_extm.order_id 
+				LEFT JOIN
+				ecm_order_goods ON ecm_order.order_id = ecm_order_goods.order_id
+				WHERE 1 =1 
+</select> 
+<select id="forExcel" parameterType ="com.ecshop.utils.PageData"  resultType="hashmap" >
+	SELECT
+				ecm_order.order_id,
+				ecm_order.order_sn,
+				ecm_order.seller_name,
+				ecm_order.add_time,
+				ecm_order.buyer_name,
+				ecm_order.goods_amount,
+				ecm_order.`status`,
+				ecm_order.Ship_time,
+				ecm_order.order_amount,
+				ecm_order.payment_name,
+				ecm_order.pay_time,
+				ecm_order_extm.consignee,
+				ecm_order_extm.address,
+				ecm_order_extm.phone_tel,
+				ecm_order_extm.phone_mob,
+				ecm_order_extm.shipping_name,
+				ecm_order_extm.zipcode,
+				ecm_order_extm.region_name,
+				ecm_order_goods.goods_name,
+				ecm_order_goods.price,
+				ecm_order_goods.quantity,
+				ecm_order_goods.is_valid
+				FROM
+				ecm_order LEFT JOIN
+				ecm_order_extm ON ecm_order.order_id =ecm_order_extm.order_id 
+				LEFT JOIN
+				ecm_order_goods ON ecm_order.order_id = ecm_order_goods.order_id
+				WHERE 1 =1 
+				<if test ="buyer_name!=null and buyer_name!='' or seller_name!=null and seller_name!='' or payment_name!=null and payment_name!='' or order_sn!=null and order_sn!=''  ">
+					and
+					(
+						buyer_name = #{buyer_name} 
+						or
+						seller_name=#{seller_name}
+						or
+						payment_name=#{payment_name}
+						or
+						order_sn=#{order_sn}
+					)
+				</if>
+				<if test = "status!=null and status!=''">
+					and
+					(
+						ecm_order.`status`=#{status}
+					)
+				</if>
+				<!-- 通过订单总价过滤 -->
+				<choose>
+				 	
+				 	<when test = "startPrices!=null and startPrices!='' and endPrices!=null and endPrices!=''">
+					and
+					(
+						ecm_order.goods_amount>=#{startPrices}
+						and 
+						#{endPrices}>=ecm_order.goods_amount
+						
+					)
+					</when>
+				
+				 	<when test = "startPrices!=null and startPrices!=''">
+					and
+					(
+						ecm_order.goods_amount>=#{startPrices}
+					)
+					</when>
+						<when test = "endPrices!=null and endPrices!=''">
+					and
+					(
+						#{endPrices}>=ecm_order.goods_amount
+					)
+				</when> 
+				
+				</choose>
+			<choose>
+				<when test="startTimes!=null and startTimes!='' or endTimes!=null and endTimes!=''">
+					and
+						(
+							#{endTimes}>=ecm_order.add_time
+							or
+							ecm_order.add_time>=#{startTimes}
+						)
+				</when>
+				<when test="startTimes!=null and startTimes!=''">
+					and(
+						ecm_order.add_time>=#{startTimes}
+					)
+				</when>
+				<when test="endTimes!=null and endTimes!=''">
+						and (
+						#{endTimes}>=ecm_order.add_time
+						
+						)
+				</when>
+			</choose>
+</select>
+
+</mapper>

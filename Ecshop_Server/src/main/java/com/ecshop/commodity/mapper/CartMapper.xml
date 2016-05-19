@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecshop.commodity.dao.CartDao">
+	<insert id="saveCart" parameterType="com.ecshop.utils.PageData" >
+		INSERT INTO ecm_cart 
+		(
+		user_id,
+		store_id,
+		spec_id,
+		goods_id,
+		price,
+		quantity,
+		goods_name,
+		goods_image,
+		specification
+		)
+		VALUES
+		(
+		#{user_id},
+		#{store_id},
+		#{spec_id},
+		#{goods_id},
+		#{price},
+		#{quantity},
+		#{goods_name},
+		#{goods_image},
+		#{specification}
+		)
+	</insert>
+	<select id="getCartByCartId" parameterType="com.ecshop.utils.PageData" resultType="com.ecshop.utils.PageData">
+			SELECT * 
+			FROM ecm_cart
+			WHERE 1 = 1
+			AND
+			user_id = #{user_id} 
+	</select>
+</mapper>
