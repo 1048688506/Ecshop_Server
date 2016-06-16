@@ -35,5 +35,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      <delete id = "deleteCollectById" parameterType ="map">  
            delete from ecm_collect where user_id=#{user_id} and item_id=#{goods_id}  
       </delete>  
-	
+	<select id="findAllUserGoods" parameterType ="com.ecshop.utils.PageData"  resultType="com.ecshop.utils.PageData">
+			SELECT
+				ecm_goods.store_id,
+				ecm_goods.price,
+				ecm_goods.goods_name,
+				ecm_goods.goods_id,
+				ecm_goods.default_image
+				FROM ecm_collect LEFT JOIN ecm_goods ON 
+				ecm_collect.item_id=ecm_goods.goods_id 
+			WHERE 1=1
+			AND 
+			ecm_collect.user_id=#{user_id}			
+	</select>
+	<select id="findAllUserStores" parameterType ="com.ecshop.utils.PageData"  resultType="com.ecshop.utils.PageData">
+	SELECT
+		ecm_store.store_id,
+		ecm_store.store_name,
+		ecm_store.store_logo,
+		ecm_store.store_name,
+		ecm_store.sgrade,
+		ecm_store.description
+		FROM ecm_collect LEFT JOIN ecm_store ON 
+		ecm_collect.item_id=ecm_store.store_id 
+		WHERE 1=1
+		AND 
+		ecm_collect.user_id=#{user_id}
+	</select>
 </mapper>

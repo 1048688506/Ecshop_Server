@@ -74,7 +74,7 @@
 				ecm_order_goods ON ecm_order.order_id = ecm_order_goods.order_id
 				WHERE 1 =1 
 </select> 
-<select id="forExcel" parameterType ="com.ecshop.utils.PageData"  resultType="hashmap" >
+<select id="forExcel" parameterType ="com.ecshop.utils.PageData"  resultType="com.ecshop.utils.PageData" >
 	SELECT
 				ecm_order.order_id,
 				ecm_order.order_sn,
@@ -154,7 +154,7 @@
 					and
 						(
 							#{endTimes}>=ecm_order.add_time
-							or
+							and
 							ecm_order.add_time>=#{startTimes}
 						)
 				</when>
@@ -171,5 +171,76 @@
 				</when>
 			</choose>
 </select>
-
+<select id="getOrderList" parameterType = "com.ecshop.utils.PageData" resultType="hashmap">
+			SELECT
+				ecm_order.order_id,
+				ecm_order.order_sn,
+				ecm_order.seller_name,
+				ecm_order.add_time,
+				ecm_order.buyer_name,
+				ecm_order.goods_amount,
+				ecm_order.`status`,
+				ecm_order.Ship_time,
+				ecm_order.order_amount,
+				ecm_order.payment_name,
+				ecm_order.pay_time,
+				ecm_order_extm.consignee,
+				ecm_order_extm.address,
+				ecm_order_extm.phone_tel,
+				ecm_order_extm.phone_mob,
+				ecm_order_extm.shipping_name,
+				ecm_order_extm.zipcode,
+				ecm_order_extm.region_name,
+				ecm_order_goods.goods_name,
+				ecm_order_goods.price,
+				ecm_order_goods.quantity,
+				ecm_order_goods.is_valid
+				FROM
+				ecm_order LEFT JOIN
+				ecm_order_extm ON ecm_order.order_id =ecm_order_extm.order_id 
+				LEFT JOIN
+				ecm_order_goods ON ecm_order.order_id = ecm_order_goods.order_id
+				WHERE 1 =1 
+				
+				
+</select>
+<select id="findOrderListByUserIdAndStatus" parameterType="com.ecshop.utils.PageData" resultType="com.ecshop.utils.PageData">
+			SELECT
+				ecm_order.Seller_id,
+				ecm_order.seller_name,
+				ecm_order.order_sn,
+				ecm_order.`status`,
+				ecm_order_goods.goods_id,
+				ecm_order_goods.goods_name,
+				ecm_order_goods.specification,
+				ecm_order_goods.price,
+				ecm_order_goods.quantity,
+				ecm_order_goods.goods_image
+				FROM ecm_order LEFT JOIN
+				ecm_order_goods ON ecm_order.order_id = ecm_order_goods.order_id
+				WHERE 1 =1
+					<choose>
+				<when test="status!=null and status!='' and user_id!=null and user_id!='' ">
+					and
+					(
+						ecm_order.`status`=#{status}
+						and
+						ecm_order.buyer_id=#{user_id}
+					)
+				
+				</when>
+					<when test="status!=null and status!=''">
+					and
+					(
+						ecm_order.`status`=#{status}
+					)
+					</when>
+				<when test="user_id!=null and user_id!=''">
+					and
+					(
+						ecm_order.buyer_id=#{user_id}
+					)	
+				</when>
+				</choose>
+				</select>
 </mapper>

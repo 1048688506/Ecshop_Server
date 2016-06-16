@@ -46,7 +46,7 @@ public class CartController {
 	 * @param quantity 商品数量
 	 * @param goods_image 商品图片地址
 	 * @param specification 商品详细说明
-	  * 请求返回参数描述：
+	 * 请求返回参数描述：
 	 * result : 02 请求服务器成功
 	 * result :03  请求传递参数不正确
 	 * result :01  服务器异常

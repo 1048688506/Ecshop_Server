@@ -93,40 +93,34 @@
 </script>
 </head>
 <body class="easyui-layout">
-<div region="north" style="height: 78px;background-color: #E0ECFF">
+<div region="north" style="height: 50px;background-color: #E0ECFF">
 <table style="padding: 5px;" width="100%">
 	<tr>
 		<td width="50%"></td>
-		<td valign="bottom" align="right" width="25%"><font size="3">&nbsp;&nbsp;欢迎管理员：${currentAdmin.username }</font></td>
-		
-		<td valign="bottom" align="right" width="25%"><font size="3"><a href="admin_logout.action">注销</a></font></td>
+		<td valign="bottom" align="right" width="25%"><font size="3" color = "red">&nbsp;&nbsp;欢迎管理员:<%-- ${currentAdmin.username } --%></font></td>
+		<td valign="bottom" align="right" width="25%"><font size="3" color = "red"><a href="admin_logout.action">注销登录 </a></font></td>
 	</tr>
 </table>
 </div>
 <div region="center">
 	<div class="easyui-tabs" fit="true" border="false" id="tabs">
 		<div title="首页" data-options="iconCls:'icon-home'">
-			<div align="center" style="padding-top: 100px;"><font color="red" size="10">欢迎使用南阳导航后台管理系统</font></div>
+			<div align="center" style="padding-top: 100px;"><font color="red" size="10">欢迎使用南阳爱萌人APP后台管理系统</font></div>
 		</div>
 	</div>
 </div>
 <div region="west" style="width: 200px;" title="导航菜单" split="true">
 <div class="easyui-accordion" data-options="fit:true,border:false">
-		<div title="用户管理"  data-options="selected:true,iconCls:'icon-user'" style="padding:10px;">
-			<a href="javascript:openTab('用户管理','userManage.jsp','icon-user')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-manage'" style="width: 150px;">管理用户</a>
+	
+		<div title="订单管理"  data-options="iconCls:'icon-product'" style="padding:10px;">
+			<a href="javascript:openTab('管理订单','ecm_oeders.jsp','icon-product')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-manage'" style="width: 150px;">管理订单</a>
 		</div>
-		<div title="类别管理"  data-options="iconCls:'icon-product'" style="padding:10px;">
-			<a href="javascript:openTab('大类管理','bigTypeManage.jsp','icon-product')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-manage'" style="width: 150px;">管理大类</a>
-			<a href="javascript:openTab('小类管理','typeManage.jsp','icon-product')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-manage'" style="width: 150px;">管理小类</a>
-		</div>
-		<div title="展示管理"  data-options="iconCls:'icon-order'" style="padding:10px">
-			<a href="javascript:openTab('展示管理','columnManage.jsp','icon-order')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-manage'" style="width: 150px;">管理展示</a>
-		</div>
+		
 		
 </div>
 </div>
 <div region="south" style="height: 25px;padding: 5px;" align="center">
-	版权所有 2016 前研工作室 <a href="http://www.java1234.com" target="_blank"></a>
+	版权所有 2016 南阳爱萌人网络公司 <a href="http://www.java1234.com" target="_blank"></a>
 </div>
 
 <div id="dlg" class="easyui-dialog" style="width: 400px;height: 220px;padding: 10px 20px" 
