@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.ecshop.commodity.service.UserService;
+import com.ecshop.utils.MD5;
 import com.ecshop.utils.PageData;
 import com.ecshop.utils.ResponseUtil;
 
@@ -50,24 +51,26 @@ public class UserController {
 		PageData pageData = new PageData() ;
 		JSONObject result = new JSONObject() ;
 		if(username!=null&&username!=""&&password!=null&&password!=""){
-			pd.put("username", username);
-			pd.put("password", password) ;
+			pd.put("username",username);
+			pd.put("password",MD5.md5(password) ) ;
+			try {
+				pageData = userService.findUserInfo(pd);
+				
+				if(!pageData.isEmpty()){
+					result.put("result", "02");//验证成功
+					result.put("userinfo", pageData);
+				}else{
+					
+					result.put("result", "01");//用户名密码不正确
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				result.put("result", "04");//服务器异常
+			}
+			
+		
 		}else{
 			result.put("result", "03");//参数不合法
-		}
-		try {
-			pageData = userService.findUserInfo(pd);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", "04");//服务器异常
-		}
-		if(pageData.isEmpty()){
-			result.put("result", "02");//验证成功
-			result.put("userinfo", pageData);
-			
-		}else{
-			
-			result.put("result", "01");//用户名密码不正确
 		}
 		
 		ResponseUtil.write(response, result) ;

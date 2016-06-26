@@ -40,7 +40,9 @@ package com.ecshop.utils;
 			}
 			return str;
 		}
-		
+		public static void main(String[] args) {
+			String string  = "12345678" ;
+			System.out.println(md5(string));
+		}
 	}
-
 

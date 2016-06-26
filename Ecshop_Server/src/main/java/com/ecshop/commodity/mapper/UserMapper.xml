@@ -6,13 +6,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 用户登录 -->
 	<select id="findUserInfo"  parameterType="com.ecshop.utils.PageData" resultType="com.ecshop.utils.PageData">
-		SELECT COUNT(*) 
+		SELECT ecm_member.user_id 
 		FROM 
-		TABLENAME
+		ecm_member
 		where
-			USERNAME=#{USERNAME}
+			ecm_member.user_name=#{username}
 			AND
-			PASSWORD=#{PASSWORD}   
+			ecm_member.password=#{password}   
 	</select>
 
 </mapper>
